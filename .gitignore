@@ -22,6 +22,7 @@
 # Objects
 *.o
 *.obj
+*parapazzi
 
 # Executables
 *.exe
