@@ -21,5 +21,6 @@ class Coda:
     
         return stringa[:-3]
 
-    def len(self):
+    def lenght(self):
         return len(self.items)
+
