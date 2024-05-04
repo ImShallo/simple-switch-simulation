@@ -1,4 +1,4 @@
-class Coda:
+class Queue:
     def __init__(self, max_size = None):
         self.items = []
         self.max_size = max_size
@@ -14,7 +14,7 @@ class Coda:
     def pop(self):
         if self.isEmpty():
             return "Coda vuota"
-        return self.items.pop()
+        return self.items.pop(0)
 
     def __str__(self):
         stringa = ""
