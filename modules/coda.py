@@ -1,15 +1,20 @@
 class Coda:
-    def __init__(self):
+    def __init__(self, max_size = None):
         self.items = []
+        self.max_size = max_size
     
     def isEmpty(self):
         return self.items == []
     
-    def push(self, value):
+    def append(self, value) -> bool:
+        if self.max_size is not None and len(self.items) >= self.max_size:
+            raise Exception("<!> Coda piena")
         self.items.append(value)
 
     def pop(self):
-        return self.items.pop(0)
+        if self.isEmpty():
+            return "Coda vuota"
+        return self.items.pop()
 
     def __str__(self):
         stringa = ""
