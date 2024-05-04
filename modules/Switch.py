@@ -29,9 +29,17 @@ class Switch:
     def add_to_buffer(self, frame: Frame):
         self._buffer.append(frame)
 
-    def process_buffer(self):
+    def process_buffer(self) -> bool:
+        if self._buffer.is_empty():
+            return False
+
         self.bufferSizeHistory.append(self._buffer.lenght())
 
         while not self._buffer.is_empty():
-            # frame.destination.receiveFrame(frame)
+            # frame.destination.receiveFrame(frame) # * Da implementare
             self._buffer.pop()
+
+        return True
+    
+    def calculate_buffer_average(self) -> float:
+        return sum(self.bufferSizeHistory) / len(self.bufferSizeHistory) if self.bufferSizeHistory else 0
