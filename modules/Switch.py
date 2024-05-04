@@ -41,5 +41,8 @@ class Switch:
 
         return True
     
+    def get_total_frames_processed(self) -> int:
+        return len(self.bufferSizeHistory)
+    
     def calculate_buffer_average(self) -> float:
-        return sum(self.bufferSizeHistory) / len(self.bufferSizeHistory) if self.bufferSizeHistory else 0
+        return sum(self.bufferSizeHistory) / self.get_total_frames_processed() if self.bufferSizeHistory else 0
