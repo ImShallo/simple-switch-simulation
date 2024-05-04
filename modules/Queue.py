@@ -12,13 +12,13 @@ class Queue:
         self.items.append(value)
 
     def pop(self):
-        if self.isEmpty():
+        if self.is_empty():
             return "Coda vuota"
         return self.items.pop(0)
 
     def __str__(self):
         stringa = ""
-        if self.isEmpty():
+        if self.is_empty():
             return "Coda vuota"
         
         for i in self.items:

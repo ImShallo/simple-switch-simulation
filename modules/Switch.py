@@ -26,13 +26,12 @@ class Switch:
 
         return string
 
-    def receiveFrame(self, frame: Frame):
+    def add_to_buffer(self, frame: Frame):
         self._buffer.append(frame)
 
-    def sendFrame(self):
+    def process_buffer(self):
         self.bufferSizeHistory.append(self._buffer.lenght())
 
         while not self._buffer.is_empty():
             # frame.destination.receiveFrame(frame)
-            print("Rimosso frame dal buffer")
             self._buffer.pop()
