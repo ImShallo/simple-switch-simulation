@@ -8,10 +8,9 @@ from .PC import PC
 class Frame: 
     PRIORITIES = {0: "Data", 1: "Video", 2: "Voice"}
 
-    def __init__(self, destination, priority, processing_time):
+    def __init__(self, destination, priority):
         self.destination: PC = self.set_destination(destination)
         self.priority: int = self.set_priority(priority)
-        self.processing_time: float = processing_time
 
     def __str__(self) -> str:
         return f"Frame: PC{self.destination.id}, {self.priority}, {self.processing_time}"
