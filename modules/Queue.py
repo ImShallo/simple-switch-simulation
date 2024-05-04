@@ -3,7 +3,7 @@ class Queue:
         self.items = []
         self.max_size = max_size
     
-    def isEmpty(self):
+    def is_empty(self):
         return self.items == []
     
     def append(self, value) -> bool:
