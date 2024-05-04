@@ -14,4 +14,4 @@ class PC:
         return f"PC {self.id} Buffer: {self.buffer}"
 
     def receiveFrame(self, frame):
-        self.buffer.push(frame)
+        self.buffer.append(frame)
