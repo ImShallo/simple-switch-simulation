@@ -3,11 +3,25 @@
 # Project: undefined
 # ----------------- # 
 
+from .PC import PC
+
 class Frame: 
-    def __init__(self, destination, priority, processing_time) -> None:
-        self.destination: int = destination
-        self.priority: int = priority
+    PRIORITIES = {0: "Data", 1: "Video", 2: "Voice"}
+
+    def __init__(self, destination, priority, processing_time):
+        self.destination: PC = self.set_destination(destination)
+        self.priority: int = self.set_priority(priority)
         self.processing_time: float = processing_time
 
     def __str__(self) -> str:
-        return f"Destination: {self.destination}, Priority: {self.priority}, Processing Time: {self.processing_time}"
+        return f"Frame: PC{self.destination.id}, {self.priority}, {self.processing_time}"
+    
+    def set_priority(self, priority: int) -> int:
+        if priority not in self.PRIORITIES:
+            raise ValueError(f"Priority must be one of the following values: {list(self.PRIORITIES.keys())}")
+        return priority
+
+    def set_destination(self, destination: PC) -> PC:
+        if not isinstance(destination, PC):
+            raise ValueError("Destination must be a PC object")
+        return destination
