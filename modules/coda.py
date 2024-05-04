@@ -29,3 +29,9 @@ class Coda:
     def lenght(self):
         return len(self.items)
 
+    def __iter__(self):
+        return iter(self.items)
+    
+    def __next__(self):
+        return next(self.items)
+
