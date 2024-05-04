@@ -11,7 +11,7 @@ class Switch:
     def __init__(self, *args, bufferSize):
         self.listPCs: list[PC] = list(args)
         self._buffer: Queue[Frame] = Queue(int(bufferSize))
-        self.bufferSizeHistory: list[int] = []
+        self._bufferSizeHistory: list[int] = []
 
     def __str__(self) -> str:
         string: str = "--- Switch ---\n"
@@ -33,7 +33,7 @@ class Switch:
         if self._buffer.is_empty():
             return False
 
-        self.bufferSizeHistory.append(self._buffer.lenght())
+        self._bufferSizeHistory.append(self._buffer.lenght())
 
         while not self._buffer.is_empty():
             # frame.destination.receiveFrame(frame) # * Da implementare
@@ -42,7 +42,10 @@ class Switch:
         return True
     
     def get_total_frames_processed(self) -> int:
-        return len(self.bufferSizeHistory)
+        return sum(self._bufferSizeHistory)
     
     def calculate_buffer_average(self) -> float:
-        return sum(self.bufferSizeHistory) / self.get_total_frames_processed() if self.bufferSizeHistory else 0
+        average = self.get_total_frames_processed() / len(self._bufferSizeHistory)
+        average = round(average, 2)
+
+        return average if self._bufferSizeHistory else 0
