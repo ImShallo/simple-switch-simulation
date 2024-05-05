@@ -49,3 +49,6 @@ class Switch:
         average = round(average, 2)
 
         return average if self._bufferSizeHistory else 0
+
+    def connect_pc(self, pc: PC):
+        self.listPCs.append(pc)
