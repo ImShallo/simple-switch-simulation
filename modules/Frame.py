@@ -13,7 +13,7 @@ class Frame:
         self.priority: int = self.set_priority(priority)
 
     def __str__(self) -> str:
-        return f"Frame: PC{self.destination.id}, {self.priority}, {self.processing_time}"
+        return f"Frame: PC{self.destination.id}, {self.priority}"
     
     def set_priority(self, priority: int) -> int:
         if priority not in self.PRIORITIES:
