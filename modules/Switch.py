@@ -16,13 +16,18 @@ class Switch:
     def __str__(self) -> str:
         string: str = "--- Switch ---\n"
         for pc in self.listPCs:
-            string += f" - {pc}\n" 
+            string += f"- {pc}\n" 
         string += f"Buffer size: {self._buffer.lenght()}\n"
         string += f"Buffer: "
 
-        # * Possibile miglioramento per la formattazione #1 https://www.tldraw.com/r/fV9OGlrdxCvJ9nwrYMCEK?v=-4075,-1556,2187,1038&p=e4VFSbeoSGqjqzGHUQUVB
-        for frame in self._buffer:
-            string += f"\n\t| {frame}"
+        all_frames_type = self.get_frames_types()
+        frame = self._buffer.peek()
+
+        for priority, count in all_frames_type.items():
+            string += f"\n | Frame {frame.PRIORITIES[priority]} (x{count})"
+
+        if not all_frames_type:
+            string += "Empty"
 
         return string
 
@@ -36,9 +41,9 @@ class Switch:
         self._bufferSizeHistory.append(self._buffer.lenght())
 
         while not self._buffer.is_empty():
-            # frame.destination.receiveFrame(frame) # * Da implementare
-            self._buffer.pop()
-
+            frame = self._buffer.pop()
+            frame.destination.receiveFrame(frame)
+            
         return True
     
     def get_total_frames_processed(self) -> int:
@@ -52,3 +57,12 @@ class Switch:
 
     def connect_pc(self, pc: PC):
         self.listPCs.append(pc)
+
+    def get_frames_types(self) -> dict:
+        all_frames_type = {}
+        for frame in self._buffer:
+            if frame.priority not in all_frames_type:
+                all_frames_type[frame.priority] = 0
+            all_frames_type[frame.priority] += 1
+
+        return all_frames_type
