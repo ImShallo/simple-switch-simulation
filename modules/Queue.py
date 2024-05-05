@@ -35,3 +35,9 @@ class Queue:
     def __next__(self):
         return next(self.items)
 
+    # peek the first element of the queue
+    def peek(self):
+        if self.is_empty():
+            return "Coda vuota"
+        return self.items[0]
+
