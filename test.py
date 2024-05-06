@@ -30,7 +30,7 @@ def beat(length: int = 1):
     yield
     time.sleep(length * 0.05)
 
-def add_columns(table):
+def add_columns():
     with beat(10):
         table.add_column("Dispositivi")
 
@@ -44,7 +44,7 @@ def add_columns(table):
     with beat(10):
         table.add_column("Percentuale")
 
-def populate_table_data(switch):
+def populate_table_data():
     table_data = []
 
     for pc in switch.listPCs:
@@ -67,27 +67,21 @@ def populate_table_data(switch):
 
 def show_table(static = True):  
     if static:
-        add_columns(table)
-        populate_table_data(switch)
+        add_columns()
+        populate_table_data()
         console.print(table)
     else:
         with Live(table, console=console, refresh_per_second=10):
-            add_columns(table)
-            populate_table_data(switch)
-
-
+            add_columns()
+            populate_table_data()
 
 def main():
-    with console.status("[bold black]Avvio del programma di simulazione...", spinner_style="yellow"):
-        time.sleep(2)
-    console.print("[bright_black]🤖 Benvenuto nella simulazione switch ")
-    time.sleep(1.5)
     console.print("[bright_black]🤖 Inserisci il tempo di simulazione in secondi ")
     time.sleep(1.2)
     secondi = int(console.input("🕒 >> "))
 
-    while secondi > MAX_SIM_SECONDS:
-        console.print(f"[red]⚠️  Attenzione! Limite massimo di tempo superato ([white]{MAX_SIM_SECONDS}[/white] secondi) ")
+    while sim_sec > MAX_SIM_SECONDS:
+        console.print(f"[red]⚠️  Attenzione! Limite massimo di tempo superato ([white]{MAX_SIM_SECONDS}[/white] sim_sec) ")
         with console.status("[bold black]Elaborando la cazzata che hai digitato...", spinner_style="yellow"):
             time.sleep(2)
         time.sleep(0.5)
@@ -95,10 +89,10 @@ def main():
         time.sleep(2)
         console.print("🤖[bright_black italic] Riproviamo... quanto vuoi che duri questa simulazione?")
         time.sleep(0.8)
-        secondi = int(console.input("🕒 >> "))
+        sim_sec = int(console.input("🕒 >> "))
 
-    while secondi < 1:
-        console.print(f"[red]⚠️  Attenzione! Devi inserire un tempo di simulazione superiore a 0 secondi ")
+    while sim_sec < 1:
+        console.print(f"[red]⚠️  Attenzione! Devi inserire un tempo di simulazione superiore a 0 sim_sec ")
         with console.status("[bold black]Elaborando la cazzata che hai digitato...", spinner_style="yellow"):
             time.sleep(2)
         time.sleep(0.5)
@@ -106,7 +100,7 @@ def main():
         time.sleep(2)
         console.print("🤖[bright_black italic] Riproviamo... quanto vuoi che duri questa simulazione?")
         time.sleep(0.8)
-        secondi = int(console.input("🕒 >> "))
+        sim_sec = int(console.input("🕒 >> "))
 
     with console.status("", spinner_style="yellow"):
         time.sleep(1)
@@ -150,13 +144,13 @@ def main():
     with console.status("[bold black] Avviando simulazione... 🚀", spinner_style="yellow"):
         time.sleep(3)
 
-    secondi_simulazione = secondi
+    original_sim_sec = sim_sec
     with console.status("[bold black] Elaborando i frame... 📶", spinner_style="yellow"):
-        while secondi > 0:
+        while sim_sec > 0:
             random_computer = random.SystemRandom().choice(switch.listPCs)
             prioritaRandom = random.SystemRandom().choice(list(Frame.PRIORITIES.keys()))
 
-            if secondi > (secondi_simulazione//2):
+            if sim_sec > (sim_sec//2):
                 frame = random.SystemRandom().randint(MAX_FRAMES//2, MAX_FRAMES)
                 waiting_time = 1
             else:
@@ -164,7 +158,7 @@ def main():
                 waiting_time = 0.5
 
             time.sleep(waiting_time)
-            secondi -= waiting_time
+            sim_sec -= waiting_time
 
             now = datetime.now()
             formatted_time = now.strftime("[%H:%M:%S]")
@@ -185,7 +179,7 @@ def main():
     time.sleep(0.5)
     console.print("[bright_black bold]Simulazione terminata... 🛑")
     time.sleep(0.8)
-    console.print(f"\n[bright_black bold]Nello switch sono stati processati [white]{switch.get_total_frames_processed()}[/white] frame in [white]{secondi_simulazione}[/white] secondi")
+    console.print(f"\n[bright_black bold]Nello switch sono stati processati [white]{switch.get_total_frames_processed()}[/white] frame in [white]{original_sim_sec}[/white] secondi")
     time.sleep(0.8)
     console.print(f"[bright_black bold]La grandezza media del buffer dello switch è di [white]{switch.calculate_buffer_average()}[/white] [yellow]frame[/]/[white]s")
     
@@ -194,6 +188,11 @@ def main():
 if __name__ == "__main__":
     if debug:
         time.sleep = add_debug(time.sleep)
+
+    with console.status("[bold black]Avvio del programma di simulazione...", spinner_style="yellow"):
+        time.sleep(2)
+    console.print("[bright_black]🤖 Benvenuto nella simulazione switch ")
+    time.sleep(1.5)
 
     main()
     show_table(static=False)
