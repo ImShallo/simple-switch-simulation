@@ -3,6 +3,7 @@
 # Project: undefined
 # ----------------- # 
 
+from __future__ import annotations
 from .PC import PC
 from .Queue import Queue
 from .Frame import Frame
@@ -14,17 +15,21 @@ class Switch:
         self._bufferSizeHistory: list[int] = []
 
     def __str__(self) -> str:
-        string: str = "--- Switch ---\n"
+        from .Frame import Frame
+
+        string = "--- Switch ---\n"
+
         for pc in self.listPCs:
-            string += f"- {pc}\n" 
+            string += f"- {pc}\n"
+             
         string += f"Buffer size: {self._buffer.lenght()}\n"
         string += f"Buffer: "
 
-        all_frames_type = self.get_frames_types()
-        frame = self._buffer.peek()
+        all_frames_type = self.get_frames_type_count()
 
         for priority, count in all_frames_type.items():
-            string += f"\n | Frame {frame.PRIORITIES[priority]} (x{count})"
+            if count != 0:
+                string += f"\n *Frame {Frame.PRIORITIES[priority]} (x{count})"
 
         if not all_frames_type:
             string += "Empty"
@@ -58,11 +63,16 @@ class Switch:
     def connect_pc(self, pc: PC):
         self.listPCs.append(pc)
 
-    def get_frames_types(self) -> dict:
+    def get_frames_type_count(self) -> dict:
+        from .Frame import Frame
+
         all_frames_type = {}
+
+        for frame_type in Frame.PRIORITIES.keys():
+            if frame_type not in all_frames_type:
+                all_frames_type[frame_type] = 0
+
         for frame in self._buffer:
-            if frame.priority not in all_frames_type:
-                all_frames_type[frame.priority] = 0
             all_frames_type[frame.priority] += 1
 
         return all_frames_type

@@ -16,14 +16,16 @@ class PC:
         self._buffer: Queue[Frame] = Queue()
 
     def __str__(self) -> str:
+        from .Frame import Frame
+
         string = f"PC {self.id}"
         string += f"\n *Buffer size: {self._buffer.lenght()}"
 
-        all_frames_type = self.get_frames_types()
-        frame = self._buffer.peek()
+        all_frames_type = self.get_frames_type_count()
 
         for priority, count in all_frames_type.items():
-            string += f"\n *Frame {frame.PRIORITIES[priority]} (x{count})"
+            if count != 0:
+                string += f"\n *Frame {Frame.PRIORITIES[priority]} (x{count})"
 
         if not all_frames_type:
             string += "Empty"
@@ -36,11 +38,16 @@ class PC:
     def totalFramesReceived(self) -> int:
         return self._buffer.lenght()
 
-    def get_frames_types(self) -> dict:
+    def get_frames_type_count(self) -> dict:
+        from .Frame import Frame
+
         all_frames_type = {}
+
+        for frame_type in Frame.PRIORITIES.keys():
+            if frame_type not in all_frames_type:
+                all_frames_type[frame_type] = 0
+
         for frame in self._buffer:
-            if frame.priority not in all_frames_type:
-                all_frames_type[frame.priority] = 0
             all_frames_type[frame.priority] += 1
 
         return all_frames_type
