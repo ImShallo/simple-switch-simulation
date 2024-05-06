@@ -14,11 +14,10 @@ MAX_SIM_SECONDS = 60
 MAX_FRAMES = 50
 
 # Debug mode
-debug = True
+debug = False
 
 # Console declaration
 console = Console()
-table = Table(box=box.SIMPLE)
 
 def add_debug(func):
     def wrapper(*args, **kwargs):
@@ -99,7 +98,9 @@ def change_table_style():
         table.columns[-1].header_style = "spring_green3"
         table.columns[-1].style = "spring_green3"
 
-def show_table(static = True):  
+def show_table(static = True): 
+    global table
+    table = Table(box=box.SIMPLE)
     if static:
         add_columns()
         populate_table_data()
@@ -188,7 +189,7 @@ def main():
             random_computer = random.SystemRandom().choice(switch.listPCs)
             prioritaRandom = random.SystemRandom().choice(list(Frame.PRIORITIES.keys()))
 
-            if sim_sec > (sim_sec//2):
+            if sim_sec > (original_sim_sec//2):
                 frame = random.SystemRandom().randint(MAX_FRAMES//2, MAX_FRAMES)
                 waiting_time = 1
             else:
@@ -220,9 +221,34 @@ def main():
     console.print(f"\n[bright_black bold]Nello switch sono stati processati [white]{switch.get_total_frames_processed()}[/white] frame in [white]{original_sim_sec}[/white] secondi")
     time.sleep(0.8)
     console.print(f"[bright_black bold]La grandezza media del buffer dello switch è di [white]{switch.calculate_buffer_average()}[/white] [yellow]frame[/]/[white]s")
-    
-    
+    time.sleep(0.8)
 
+    with console.status("", spinner_style="yellow"):
+        time.sleep(2)
+    console.print("[bright_black]\n🤖 Desideri visualizzare le statistiche della simulazione? [bold bright_black](s/n)[/]")
+    time.sleep(0.5)
+    show_stats = console.input("📊 >> ")
+
+    while show_stats.lower() not in ['s', 'n']:
+        console.print(f"[red]⚠️  Attenzione! Devi rispondere con [white]s[/white] o [white]n[/white] ")
+        with console.status("[bold black]Elaborando la cazzata che hai digitato...", spinner_style="yellow"):
+            time.sleep(2)
+        time.sleep(0.5)
+        console.print("🤖[bright_black italic] Sei veramente un rimasto [/]😂") 
+        time.sleep(2)
+        console.print("🤖[bright_black italic] Riproviamo... vuoi visualizzare le statistiche della simulazione? (s/n)")
+        time.sleep(1.2)
+        show_stats = console.input("📊 >> ")
+
+    if show_stats.lower() == 's':
+        with console.status("", spinner_style="yellow"):
+            time.sleep(2)
+        show_table(static=False)
+
+    with console.status("", spinner_style="yellow"):
+        time.sleep(2)
+    
+    
 if __name__ == "__main__":
     if debug:
         time.sleep = add_debug(time.sleep)
@@ -232,5 +258,25 @@ if __name__ == "__main__":
     console.print("[bright_black]🤖 Benvenuto nella simulazione switch ")
     time.sleep(1.5)
 
-    main()
-    show_table(static=False)
+    while True:
+        main()
+        console.print("[bright_black]🤖 Desideri eseguire una nuova simulazione? [bold bright_black](s/n)[/]")
+        time.sleep(0.5)
+        new_sim = console.input("🔄 >> ")
+
+        while new_sim.lower() not in ['s', 'n']:
+            console.print(f"[red]⚠️  Attenzione! Devi rispondere con [white]s[/white] o [white]n[/white] ")
+            with console.status("[bold black]Elaborando la cazzata che hai digitato...", spinner_style="yellow"):
+                time.sleep(2)
+            time.sleep(0.5)
+            console.print("🤖[bright_black italic] Dovresti andare a zappare [/]😉") 
+            time.sleep(2)
+            console.print("🤖[bright_black italic] Riproviamo... vuoi eseguire una nuova simulazione? (s/n)")
+            time.sleep(0.8)
+            new_sim = console.input("🔄 >> ")
+
+        if new_sim.lower() == 'n':
+            with console.status("", spinner_style="yellow"):
+                time.sleep(2)
+            console.print("[bright_black]🤖 Arrivederci... 👋")
+            break
