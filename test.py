@@ -5,6 +5,7 @@ from datetime import datetime
 from rich.console import Console
 from rich.live import Live
 from rich.table import Table
+from rich import box
 from contextlib import contextmanager
 
 # COSTANTS
@@ -13,11 +14,11 @@ MAX_SIM_SECONDS = 60
 MAX_FRAMES = 50
 
 # Debug mode
-debug = False
+debug = True
 
 # Console declaration
 console = Console()
-table = Table()
+table = Table(box=box.SIMPLE)
 
 def add_debug(func):
     def wrapper(*args, **kwargs):
@@ -28,7 +29,7 @@ def add_debug(func):
 @contextmanager
 def beat(length: int = 1):
     yield
-    time.sleep(length * 0.05)
+    time.sleep(length * 0.03)
 
 def add_columns():
     with beat(10):
@@ -43,6 +44,15 @@ def add_columns():
     
     with beat(10):
         table.add_column("Percentuale")
+
+    with beat(10):
+        table.title = "[bold][not italic]Statistiche Simulazione[/]"
+
+    with beat(10):
+        table.title = "[bold][not italic]📊 Statistiche Simulazione[/]"
+
+    with beat(10):
+        table.title = "[bold][not italic]📊 Statistiche Simulazione 🔢[/]"
 
 def populate_table_data():
     table_data = []
@@ -65,20 +75,48 @@ def populate_table_data():
         with beat(10):
             table.add_row(*row)
 
+def change_table_style():
+    with beat(10):
+        table.columns[0].justify = "center"
+    for i in range(1, len(table.columns)):
+        with beat(10):
+            table.columns[i].justify = "right"
+        
+    with beat(10):
+        table.columns[0].header_style = "cyan"
+        table.columns[0].style = "cyan"
+
+    for i in Frame.PRIORITIES:
+        with beat(10):
+            table.columns[i+1].header_style = "yellow"
+            table.columns[i+1].style = "yellow"
+
+    with beat(10):
+        table.columns[-2].header_style = "white"
+        table.columns[-2].style = "white"
+
+    with beat(10):
+        table.columns[-1].header_style = "spring_green3"
+        table.columns[-1].style = "spring_green3"
+
 def show_table(static = True):  
     if static:
         add_columns()
         populate_table_data()
         console.print(table)
     else:
-        with Live(table, console=console, refresh_per_second=10):
+        with Live(table, console=console, refresh_per_second=20):
             add_columns()
             populate_table_data()
+            change_table_style()
+
+            with beat(10):
+                table.box = box.ROUNDED
 
 def main():
     console.print("[bright_black]🤖 Inserisci il tempo di simulazione in secondi ")
     time.sleep(1.2)
-    secondi = int(console.input("🕒 >> "))
+    sim_sec = int(console.input("🕒 >> "))
 
     while sim_sec > MAX_SIM_SECONDS:
         console.print(f"[red]⚠️  Attenzione! Limite massimo di tempo superato ([white]{MAX_SIM_SECONDS}[/white] sim_sec) ")
@@ -196,4 +234,3 @@ if __name__ == "__main__":
 
     main()
     show_table(static=False)
-    
