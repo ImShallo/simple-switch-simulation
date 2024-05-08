@@ -42,7 +42,8 @@ class Switch:
     def process_buffer(self) -> bool:
         if self._buffer.is_empty():
             return False
-
+        
+        self._sort_buffer()
         self._bufferSizeHistory.append(len(self._buffer))
 
         while not self._buffer.is_empty():
