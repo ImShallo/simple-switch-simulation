@@ -34,3 +34,6 @@ class Queue:
     
     def __next__(self):
         return next(self.items)
+    
+    def __getitem__(self, index):
+        return self.items[index]
