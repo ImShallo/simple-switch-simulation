@@ -9,7 +9,7 @@ from .Queue import Queue
 from .Frame import Frame
 
 class Switch:
-    def __init__(self, *args, bufferSize):
+    def __init__(self, *args, bufferSize = 100):
         self.listPCs: list[PC] = list(args)
         self._buffer: Queue[Frame] = Queue(int(bufferSize))
         self._bufferSizeHistory: list[int] = []
@@ -22,7 +22,7 @@ class Switch:
         for pc in self.listPCs:
             string += f"- {pc}\n"
              
-        string += f"Buffer size: {self._buffer.lenght()}\n"
+        string += f"Buffer size: {len(self._buffer)}\n"
         string += f"Buffer: "
 
         all_frames_type = self.get_frames_type_count()
@@ -43,7 +43,7 @@ class Switch:
         if self._buffer.is_empty():
             return False
 
-        self._bufferSizeHistory.append(self._buffer.lenght())
+        self._bufferSizeHistory.append(len(self._buffer))
 
         while not self._buffer.is_empty():
             frame = self._buffer.pop()
@@ -76,3 +76,10 @@ class Switch:
             all_frames_type[frame.priority] += 1
 
         return all_frames_type
+
+    def _sort_buffer(self) -> None:
+        for i in range(len(self._buffer)):
+            for j in range(i, len(self._buffer)):
+                if self._buffer[i].priority < self._buffer[j].priority:
+                    self._buffer[i], self._buffer[j] = self._buffer[j], self._buffer[i]
+        

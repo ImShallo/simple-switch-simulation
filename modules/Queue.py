@@ -26,7 +26,7 @@ class Queue:
     
         return stringa[:-3]
 
-    def lenght(self):
+    def __len__(self):
         return len(self.items)
 
     def __iter__(self):
@@ -34,10 +34,3 @@ class Queue:
     
     def __next__(self):
         return next(self.items)
-
-    # peek the first element of the queue
-    def peek(self):
-        if self.is_empty():
-            return "Coda vuota"
-        return self.items[0]
-

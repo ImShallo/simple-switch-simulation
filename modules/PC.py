@@ -19,7 +19,7 @@ class PC:
         from .Frame import Frame
 
         string = f"PC {self.id}"
-        string += f"\n *Buffer size: {self._buffer.lenght()}"
+        string += f"\n *Buffer size: {len(self._buffer.lenght)}"
 
         all_frames_type = self.get_frames_type_count()
 
@@ -36,7 +36,7 @@ class PC:
         self._buffer.append(frame)
 
     def totalFramesReceived(self) -> int:
-        return self._buffer.lenght()
+        return len(self._buffer)
 
     def get_frames_type_count(self) -> dict:
         from .Frame import Frame
