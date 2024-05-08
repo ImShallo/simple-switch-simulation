@@ -217,7 +217,7 @@ def main():
             time.sleep(0.5)
             console.print("🤖[bright_black italic] Non ti hanno insegnato i numeri interi alle elementari? [/]🤨") 
             time.sleep(1.5)
-            console.print("🤖[bright_black italic] Riproviamo... quanto vuoi che duri questa simulazione?")
+            console.print("🤖[bright_black italic] Riproviamo... quanti PC vuoi collegare?")
             time.sleep(0.8)
 
         except Exception as e:
