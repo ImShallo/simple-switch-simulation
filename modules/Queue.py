@@ -37,3 +37,6 @@ class Queue:
     
     def __getitem__(self, index):
         return self.items[index]
+    
+    def __setitem__(self, index, value):
+        self.items[index] = value
