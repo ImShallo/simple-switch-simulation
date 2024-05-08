@@ -56,7 +56,7 @@ def add_columns():
         table.title = "[bold][not italic]📊 Statistiche Simulazione[/]"
 
     with beat(10):
-        table.title = "[bold][not italic]📊 Statistiche Simulazione 🔢[/]"
+        table.title = "[bold][not italic]📊 Statistiche Simulazione🔢[/]"
 
 def populate_table_data():
     table_data = []
@@ -92,8 +92,8 @@ def change_table_style():
 
     for i in Frame.PRIORITIES:
         with beat(10):
-            table.columns[i+1].header_style = "yellow1"
-            table.columns[i+1].style = "yellow1"
+            table.columns[i+1].header_style = "bright_yellow" # da cambiare
+            table.columns[i+1].style = "bright_yellow"
 
     with beat(10):
         table.columns[-2].header_style = "white"
@@ -140,33 +140,33 @@ def main():
             if str(e) == "Time limit exceeded":
                 console.print(f"[red]⚠️  Attenzione! Limite massimo di tempo superato ([white]{MAX_SIM_SECONDS}[/white] secondi) ")
                 with console.status("[bold black]Elaborando la cazzata che hai digitato...", spinner_style="yellow"):
-                    time.sleep(2)
+                    time.sleep(1.5)
                 time.sleep(0.5)
                 console.print("🤖[bright_black italic] Oh coglione, quanto ci vuoi stare qui? [/]🫤") 
-                time.sleep(2)
+                time.sleep(1.5)
                 console.print("🤖[bright_black italic] Riproviamo... quanto vuoi che duri questa simulazione?")
                 time.sleep(0.8)
 
             elif str(e) == "Time must be greater than 0":
                 console.print(f"[red]⚠️  Attenzione! Devi inserire un tempo di simulazione superiore a [white]0[/white] secondi ")
                 with console.status("[bold black]Elaborando la cazzata che hai digitato...", spinner_style="yellow"):
-                    time.sleep(2)
+                    time.sleep(1.5)
                 time.sleep(0.5)
                 if sim_sec == 0:
                     console.print("🤖[bright_black italic] Ora mi devi spiegare l'utilità della simulazione se metti 0 [/]🫠")
                 elif sim_sec < 1:
                     console.print("🤖[bright_black italic] Ti chiamano Dottor Who per caso? [/]🧐") 
-                time.sleep(2)
+                time.sleep(1.5)
                 console.print("🤖[bright_black italic] Riproviamo... quanto vuoi che duri questa simulazione?")
                 time.sleep(0.8)
 
         except ValueError as e:
             console.print(f"[red]⚠️  Attenzione! Devi inserire un numero intero di secondi ")
             with console.status("[bold black]Elaborando la cazzata che hai digitato...", spinner_style="yellow"):
-                time.sleep(2)
+                time.sleep(1.5)
             time.sleep(0.5)
             console.print("🤖[bright_black italic] Non ti hanno insegnato i numeri interi alle elementari? [/]🤨") 
-            time.sleep(2)
+            time.sleep(1.5)
             console.print("🤖[bright_black italic] Riproviamo... quanto vuoi che duri questa simulazione?")
             time.sleep(0.8)
 
@@ -194,29 +194,29 @@ def main():
             if str(e) == "PC limit exceeded":
                 console.print(f"[red]⚠️  Attenzione! Limite massimo di PC superato ([white]{MAX_PCS}[/white]) ")
                 with console.status("[bold black]Elaborando la cazzata che hai digitato...", spinner_style="yellow"):
-                    time.sleep(2)
+                    time.sleep(1.5)
                 time.sleep(0.5)
                 console.print("🤖[bright_black italic] Ora mi fai incazzare. NON abbiamo switch della nasa!! [/]🙄") 
-                time.sleep(2)
+                time.sleep(1.5)
                 console.print("🤖[bright_black italic] Riproviamo... quanti PC vuoi collegare?")
                 time.sleep(0.8)
             elif str(e) == "PC number must be greater than 0":
                 console.print(f"[red]⚠️  Attenzione! Devi collegare almeno un PC allo switch ")
                 with console.status("[bold black]Elaborando la cazzata che hai digitato...", spinner_style="yellow"):
-                    time.sleep(2)
+                    time.sleep(1.5)
                 time.sleep(0.5)
                 console.print("🤖[bright_black italic] Ma sei scemo!? [/]😡") 
-                time.sleep(2)
+                time.sleep(1.5)
                 console.print("🤖[bright_black italic] Riproviamo...  quanti PC vuoi collegare?")
                 time.sleep(0.8)
 
         except ValueError as e:
             console.print(f"[red]⚠️  Attenzione! Devi inserire un numero intero di PC")
             with console.status("[bold black]Elaborando la cazzata che hai digitato...", spinner_style="yellow"):
-                time.sleep(2)
+                time.sleep(1.5)
             time.sleep(0.5)
             console.print("🤖[bright_black italic] Non ti hanno insegnato i numeri interi alle elementari? [/]🤨") 
-            time.sleep(2)
+            time.sleep(1.5)
             console.print("🤖[bright_black italic] Riproviamo... quanto vuoi che duri questa simulazione?")
             time.sleep(0.8)
 
@@ -237,7 +237,7 @@ def main():
         switch.connect_pc(new_pc)
 
     with console.status("[bold black] Avviando simulazione... 🚀", spinner_style="yellow"):
-        time.sleep(2)
+        time.sleep(1.5)
 
     original_sim_sec = sim_sec
     with console.status("[bold black] Elaborando i frame... 📶", spinner_style="yellow"):
@@ -270,7 +270,7 @@ def main():
 
 
     with console.status("[bold black] Caricando risultati", spinner_style="yellow"):
-        time.sleep(2)
+        time.sleep(1.5)
     time.sleep(0.5)
     console.print("[bright_black bold]Simulazione terminata... 🛑")
     time.sleep(0.8)
@@ -288,21 +288,21 @@ def main():
     while show_stats.lower() not in ['s', 'n']:
         console.print(f"[red]⚠️  Attenzione! Devi rispondere con [white]s[/white] o [white]n[/white] ")
         with console.status("[bold black]Elaborando la cazzata che hai digitato...", spinner_style="yellow"):
-            time.sleep(2)
+            time.sleep(1.5)
         time.sleep(0.5)
         console.print("🤖[bright_black italic] Sei veramente un rimasto [/]🥱") 
-        time.sleep(2)
+        time.sleep(1.5)
         console.print("🤖[bright_black italic] Riproviamo... vuoi visualizzare le statistiche della simulazione? (s/n)")
         time.sleep(1.2)
         show_stats = console.input("📊 >> ")
 
     if show_stats.lower() == 's':
         with console.status("", spinner_style="yellow"):
-            time.sleep(2)
+            time.sleep(1.5)
         show_table(static=False)
 
     with console.status("", spinner_style="yellow"):
-        time.sleep(2)
+        time.sleep(1.5)
     
     
 if __name__ == "__main__":
@@ -310,7 +310,7 @@ if __name__ == "__main__":
         time.sleep = add_debug(time.sleep)
 
     with console.status("[bold black]Avvio del programma di simulazione...", spinner_style="yellow"):
-        time.sleep(2)
+        time.sleep(1.5)
     console.print("[bright_black]🤖 Benvenuto nella simulazione switch ")
     time.sleep(1.5)
 
@@ -323,10 +323,10 @@ if __name__ == "__main__":
         while new_sim.lower() not in ['s', 'n']:
             console.print(f"[red]⚠️  Attenzione! Devi rispondere con [white]s[/white] o [white]n[/white] ")
             with console.status("[bold black]Elaborando la cazzata che hai digitato...", spinner_style="yellow"):
-                time.sleep(2)
+                time.sleep(1.5)
             time.sleep(0.5)
             console.print("🤖[bright_black italic] Dovresti andare a zappare [/]😉") 
-            time.sleep(2)
+            time.sleep(1.5)
             console.print("🤖[bright_black italic] Riproviamo... vuoi eseguire una nuova simulazione? (s/n)")
             time.sleep(0.8)
             new_sim = console.input("🔄 >> ")
