@@ -4,6 +4,9 @@ This Python code simulates the operation of a network switch by generating and p
 
 This simulation was developed as part of a school project.
 
+## Demo
+![Demo](./demo.gif)
+
 
 ## Getting Started
 Get started by running the project locally, simply follow these steps:
