@@ -1,3 +1,8 @@
+# ----------------- # 
+# Date: 04-05-2024
+# Project: simple switch simulation
+# ----------------- # 
+
 class Queue:
     def __init__(self, max_size = None):
         self.items = []

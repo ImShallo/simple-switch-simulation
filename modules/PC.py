@@ -1,6 +1,6 @@
 # ----------------- # 
 # Date: 04-05-2024
-# Project: undefined
+# Project: simple switch simulation
 # ----------------- # 
 
 from __future__ import annotations
