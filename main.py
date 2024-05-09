@@ -11,7 +11,7 @@ from contextlib import contextmanager
 # COSTANTS
 MAX_PCS = 5
 MAX_SIM_SECONDS = 60
-MAX_FRAMES = 50
+MAX_FRAMES = 70
 
 # Debug mode
 debug = False
@@ -92,7 +92,7 @@ def change_table_style():
 
     for i in Frame.PRIORITIES:
         with beat(10):
-            table.columns[i+1].header_style = "bright_yellow" # da cambiare
+            table.columns[i+1].header_style = "bright_yellow"
             table.columns[i+1].style = "bright_yellow"
 
     with beat(10):
