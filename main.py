@@ -4,14 +4,17 @@ from modules import *
 from datetime import datetime
 from rich.console import Console
 from rich.live import Live
+from rich.progress import Progress, BarColumn, TextColumn
 from rich.table import Table
 from rich import box
+import keyboard
 from contextlib import contextmanager
 
 # COSTANTS
 MAX_PCS = 5
 MAX_SIM_SECONDS = 60
-MAX_FRAMES = 70
+MAX_FRAMES = 100
+MIN_FRAMES = 1
 
 # Debug mode
 debug = False
@@ -57,6 +60,48 @@ def add_columns():
 
     with beat(10):
         table.title = "[bold][not italic]📊 Statistiche Simulazione🔢[/]"
+
+def draw_volume_bar(k_value):
+    progress = Progress(
+        TextColumn(" [bold yellow]Poco casuale[/bold yellow] "),
+        BarColumn(bar_width=40, complete_style="green", finished_style="green"),
+        TextColumn(" [bold yellow]Molto casuale[/bold yellow] "),
+        TextColumn("[bold blue]→[/bold blue] per aumentare. [bold blue]←[/bold blue] per diminuire. "
+                   "[bold blue]Enter[/bold blue] per confermare.")
+    )
+    volume_task = progress.add_task("randomness", total=10, completed=k_value)
+    return progress, volume_task
+
+def randomness_bar(k_value):
+    progress, volume_task = draw_volume_bar(k_value)
+    running = True
+    
+    def on_key_event(event):
+        nonlocal k_value, running
+        if event.name == 'right' or event.scan_code == 77 and k_value < 10:
+            k_value += 1
+            progress.update(volume_task, completed=k_value)
+        elif event.name == 'left' or event.scan_code == 75 and k_value > 1:
+            k_value -= 1
+            progress.update(volume_task, completed=k_value)
+        elif event.name == 'enter':
+            running = False
+
+    keyboard.on_press(on_key_event)
+
+    with Live(progress, refresh_per_second=10, console=console):
+        try:
+            while running:
+                pass
+        except KeyboardInterrupt:
+            pass
+    return k_value
+
+def generate_frames(k_value):
+    middle = MAX_FRAMES // 2
+    lower = middle - (k_value * 10 / 2)
+    upper = middle + (k_value * 10 / 2)
+    return random.SystemRandom().randint(lower, upper) + MIN_FRAMES
 
 def populate_table_data():
     table_data = []
@@ -224,6 +269,12 @@ def main():
             console.print("[red]⚠️  General error, report the issue: [bright_black]", e)
     input_is_valid = False
 
+    with console.status("", spinner_style="yellow"):
+        time.sleep(1)
+    console.print("[bright_black]🤖 Inserisci la casualità dell'intervallo dei frame")
+    time.sleep(0.8)
+
+    k_value = randomness_bar(5)
 
     # PC and Switch declaration
     global switch 
@@ -246,10 +297,10 @@ def main():
             prioritaRandom = random.SystemRandom().choice(list(Frame.PRIORITIES.keys()))
 
             if sim_sec > (original_sim_sec//2):
-                frame = random.SystemRandom().randint(MAX_FRAMES//2, MAX_FRAMES)
+                number_frame = generate_frames(k_value)
                 waiting_time = 1
             else:
-                frame = random.SystemRandom().randint(1, MAX_FRAMES//3)
+                number_frame = generate_frames(k_value)
                 waiting_time = 0.5
 
             time.sleep(waiting_time)
@@ -258,13 +309,13 @@ def main():
             now = datetime.now()
             formatted_time = now.strftime("[%H:%M:%S]")
             
-            for _ in range(frame):
+            for _ in range(number_frame):
                 newFrame = Frame(random_computer, prioritaRandom)
                 switch.add_to_buffer(newFrame)
 
             console.print(
                 f"[turquoise4]{formatted_time}[/turquoise4] "
-                f"Sono stati inviati [bold yellow]{frame} frame {Frame.PRIORITIES[prioritaRandom].lower()}[/bold yellow] al [bold cyan]PC {random_computer.id}")
+                f"Sono stati inviati [bold yellow]{number_frame} frame {Frame.PRIORITIES[prioritaRandom].lower()}[/bold yellow] al [bold cyan]PC {random_computer.id}")
 
             switch.process_buffer()
 
@@ -283,6 +334,7 @@ def main():
         time.sleep(1)
     console.print("[bright_black]\n🤖 Desideri visualizzare le statistiche della simulazione? [bold bright_black](s/n)[/]")
     time.sleep(0.5)
+    console.input()
     show_stats = console.input("📊 >> ")
 
     while show_stats.lower() not in ['s', 'n']:
