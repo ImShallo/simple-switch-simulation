@@ -44,4 +44,4 @@ Get started by running the project locally, simply follow these steps:
 - Utilizes rich text formatting for a visually appealing and informative display of simulation progress and results.
 
 ### Error Handling
-- Robust error handling is implemented to prevent crashes and provide informative feedback to the user in case of unexpected situations or input errors.
+- Robust error handling is implemented to prevent crashes and provide humorous feedback to the user in case of unexpected situations or input errors.

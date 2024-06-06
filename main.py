@@ -8,16 +8,18 @@ from rich.progress import Progress, BarColumn, TextColumn
 from rich.table import Table
 from rich import box
 import msvcrt
+import json
 from contextlib import contextmanager
+
 
 # COSTANTS
 MAX_PCS = 5
 MAX_SIM_SECONDS = 60
-MAX_FRAMES = 100
+MAX_FRAMES = 200
 MIN_FRAMES = 1
 
 # Debug mode
-debug = True
+debug = False
 
 # Console declaration
 console = Console()
@@ -35,39 +37,38 @@ def beat(length: int = 1):
 
 def add_columns():
     with beat(10):
-        table.add_column("Dispositivi")
+        table.add_column(locale["devices"])
 
     for frame_type in Frame.PRIORITIES.values():
         with beat(10):
             table.add_column(f"Frame {frame_type}")
 
     with beat(10):
-        table.add_column("Totale")
+        table.add_column(locale["total"])
     
     with beat(10):
-        table.add_column("Percentuale")
+        table.add_column(locale["percentage"])
 
     with beat(10):
-        title = "Statistiche Simulazione"
+        title = locale["table_title"]
         for i in range(0, len(title)+1):
             with beat(3):
                 table.title = title[:i]
 
-        table.title = "[bold][not italic]Statistiche Simulazione[/]"
+        table.title = f"[bold][not italic]{locale['table_title']}[/]"
 
     with beat(10):
-        table.title = "[bold][not italic]📊 Statistiche Simulazione[/]"
+        table.title = f"[bold][not italic]📊 {locale['table_title']}[/]"
 
     with beat(10):
-        table.title = "[bold][not italic]📊 Statistiche Simulazione🔢[/]"
+        table.title = f"[bold][not italic]📊 {locale['table_title']}🔢[/]"
 
 def draw_volume_bar(k_value):
     progress = Progress(
-        TextColumn(" [bold yellow]Poco casuale[/bold yellow] "),
+        TextColumn(locale["randomness_low"]),
         BarColumn(bar_width=40, complete_style="green", finished_style="green"),
-        TextColumn(" [bold yellow]Molto casuale[/bold yellow] "),
-        TextColumn("[bold blue]→[/bold blue] per aumentare. [bold blue]←[/bold blue] per diminuire. "
-                   "[bold blue]Enter[/bold blue] per confermare.")
+        TextColumn(locale["randomness_high"]),
+        TextColumn(locale["randomness_instructions"])
     )
     volume_task = progress.add_task("randomness", total=10, completed=k_value)
     return progress, volume_task
@@ -164,7 +165,7 @@ def show_table(static = True):
                 table.box = box.ROUNDED
 
 def main():
-    console.print("[bright_black]🤖 Inserisci il tempo di simulazione in secondi ")
+    console.print(locale["input_time"])
     time.sleep(1.2)
 
     input_is_valid = False
@@ -182,45 +183,45 @@ def main():
 
         except CustomException.NotInRangeError as e:
             if str(e) == "Time limit exceeded":
-                console.print(f"[red]⚠️  Attenzione! Limite massimo di tempo superato ([white]{MAX_SIM_SECONDS}[/white] secondi) ")
-                with console.status("[bold black]Elaborando la cazzata che hai digitato...", spinner_style="yellow"):
+                console.print(locale["error_time_limit_exceeded"].format(MAX_SIM_SECONDS=MAX_SIM_SECONDS))
+                with console.status(locale["processing_nonsense"], spinner_style="yellow"):
                     time.sleep(1.5)
                 time.sleep(0.5)
-                console.print("🤖[bright_black italic] Oh coglione, quanto ci vuoi stare qui? [/]🫤") 
+                console.print(locale["robot_time_limit_exceeded"]) 
                 time.sleep(1.5)
-                console.print("🤖[bright_black italic] Riproviamo... quanto vuoi che duri questa simulazione?")
+                console.print(locale["robot_retry_time_limit_exceeded"])
                 time.sleep(0.8)
 
             elif str(e) == "Time must be greater than 0":
-                console.print(f"[red]⚠️  Attenzione! Devi inserire un tempo di simulazione superiore a [white]0[/white] secondi ")
-                with console.status("[bold black]Elaborando la cazzata che hai digitato...", spinner_style="yellow"):
+                console.print(locale["error_time_must_be_greater_than_0"])
+                with console.status(locale["processing_nonsense"], spinner_style="yellow"):
                     time.sleep(1.5)
                 time.sleep(0.5)
                 if sim_sec == 0:
-                    console.print("🤖[bright_black italic] Ora mi devi spiegare l'utilità della simulazione se metti 0 [/]🫠")
+                    console.print(locale["robot_time_equals_0"])
                 elif sim_sec < 1:
-                    console.print("🤖[bright_black italic] Ti chiamano Dottor Who per caso? [/]🧐") 
+                    console.print(locale["robot_time_less_than_1"]) 
                 time.sleep(1.5)
-                console.print("🤖[bright_black italic] Riproviamo... quanto vuoi che duri questa simulazione?")
+                console.print(locale["robot_retry_time_limit_exceeded"])
                 time.sleep(0.8)
 
         except ValueError as e:
-            console.print(f"[red]⚠️  Attenzione! Devi inserire un numero intero di secondi ")
-            with console.status("[bold black]Elaborando la cazzata che hai digitato...", spinner_style="yellow"):
+            console.print(locale["error_time_must_be_integer"])
+            with console.status(locale["processing_nonsense"], spinner_style="yellow"):
                 time.sleep(1.5)
             time.sleep(0.5)
-            console.print("🤖[bright_black italic] Non ti hanno insegnato i numeri interi alle elementari? [/]🤨") 
+            console.print(locale["robot_time_must_be_integer"]) 
             time.sleep(1.5)
-            console.print("🤖[bright_black italic] Riproviamo... quanto vuoi che duri questa simulazione?")
+            console.print(locale["robot_retry_time_limit_exceeded"])
             time.sleep(0.8)
 
         except Exception as e:
-            console.print("[red]⚠️  General error, report the issue: [bright_black]", e)
+            console.print(locale["error_general"], e)
     input_is_valid = False
 
     with console.status("", spinner_style="yellow"):
         time.sleep(1)
-    console.print("[bright_black]🤖 Inserisci il numero di PC collegati allo switch ")
+    console.print(locale["input_pc_number"])
     time.sleep(0.8)
 
     while not input_is_valid:
@@ -236,61 +237,61 @@ def main():
         
         except CustomException.NotInRangeError as e:
             if str(e) == "PC limit exceeded":
-                console.print(f"[red]⚠️  Attenzione! Limite massimo di PC superato ([white]{MAX_PCS}[/white]) ")
-                with console.status("[bold black]Elaborando la cazzata che hai digitato...", spinner_style="yellow"):
+                console.print(locale["error_pc_limit_exceeded"].format(MAX_PCS=MAX_PCS))
+                with console.status(locale["processing_nonsense"], spinner_style="yellow"):
                     time.sleep(1.5)
                 time.sleep(0.5)
-                console.print("🤖[bright_black italic] Ora mi fai incazzare. NON abbiamo switch della nasa!! [/]🙄") 
+                console.print(locale["robot_pc_limit_exceeded"]) 
                 time.sleep(1.5)
-                console.print("🤖[bright_black italic] Riproviamo... quanti PC vuoi collegare?")
+                console.print(locale["robot_retry_pc_limit_exceeded"])
                 time.sleep(0.8)
             elif str(e) == "PC number must be greater than 0":
-                console.print(f"[red]⚠️  Attenzione! Devi collegare almeno un PC allo switch ")
-                with console.status("[bold black]Elaborando la cazzata che hai digitato...", spinner_style="yellow"):
+                console.print(locale["error_pc_must_be_greater_than_0"])
+                with console.status(locale["processing_nonsense"], spinner_style="yellow"):
                     time.sleep(1.5)
                 time.sleep(0.5)
-                console.print("🤖[bright_black italic] Ma sei scemo!? [/]😡") 
+                console.print(locale["robot_pc_must_be_greater_than_0"]) 
                 time.sleep(1.5)
-                console.print("🤖[bright_black italic] Riproviamo...  quanti PC vuoi collegare?")
+                console.print(locale["robot_retry_pc_limit_exceeded"])
                 time.sleep(0.8)
 
         except ValueError as e:
-            console.print(f"[red]⚠️  Attenzione! Devi inserire un numero intero di PC")
-            with console.status("[bold black]Elaborando la cazzata che hai digitato...", spinner_style="yellow"):
+            console.print(locale["error_pc_must_be_integer"])
+            with console.status(locale["processing_nonsense"], spinner_style="yellow"):
                 time.sleep(1.5)
             time.sleep(0.5)
-            console.print("🤖[bright_black italic] Non ti hanno insegnato i numeri interi alle elementari? [/]🤨") 
+            console.print(locale["robot_pc_must_be_integer"]) 
             time.sleep(1.5)
-            console.print("🤖[bright_black italic] Riproviamo... quanti PC vuoi collegare?")
+            console.print(locale["robot_retry_pc_limit_exceeded"])
             time.sleep(0.8)
 
         except Exception as e:
-            console.print("[red]⚠️  General error, report the issue: [bright_black]", e)
+            console.print(locale["error_general"], e)
     input_is_valid = False
 
     with console.status("", spinner_style="yellow"):
         time.sleep(1)
-    console.print("[bright_black]🤖 Inserisci la casualità dell'intervallo dei frame")
+    console.print(locale["input_randomness"])
     time.sleep(0.8)
 
     k_value = randomness_bar(5)
 
     # PC and Switch declaration
     global switch 
-    switch = Switch(bufferSize=100)
+    switch = Switch(bufferSize=MAX_FRAMES)
 
     for i in range(pc_number):
         new_pc = PC(i+1)
-        with console.status(f"[bold black]", spinner_style="yellow"):
+        with console.status("", spinner_style="yellow"):
             time.sleep(0.8)
-        console.print(f"[bright_black]🤖 PC {new_pc.id} collegato allo switch ✅")
+        console.print(locale["pc_connected"].format(pc_id=i+1))
         switch.connect_pc(new_pc)
 
-    with console.status("[bold black] Avviando simulazione... 🚀", spinner_style="yellow"):
+    with console.status(locale["starting_simulation"], spinner_style="yellow"):
         time.sleep(1.5)
 
     original_sim_sec = sim_sec
-    with console.status("[bold black] Elaborando i frame... 📶", spinner_style="yellow"):
+    with console.status(locale["frame_processing"], spinner_style="yellow"):
         while sim_sec > 0:
             random_computer = random.SystemRandom().choice(switch.listPCs)
             prioritaRandom = random.SystemRandom().choice(list(Frame.PRIORITIES.keys()))
@@ -313,40 +314,40 @@ def main():
                 switch.add_to_buffer(newFrame)
 
             console.print(
-                f"[turquoise4]{formatted_time}[/turquoise4] "
-                f"Sono stati inviati [bold yellow]{number_frame} frame {Frame.PRIORITIES[prioritaRandom].lower()}[/bold yellow] al [bold cyan]PC {random_computer.id}")
+                f"[turquoise4]{formatted_time}[/turquoise4] ",
+                locale["frame_sent"].format(number_frame=number_frame, pc_id=random_computer.id, frame_type=Frame.PRIORITIES[prioritaRandom].lower()))
 
             switch.process_buffer()
 
 
-    with console.status("[bold black] Caricando risultati", spinner_style="yellow"):
+    with console.status(locale["loading_results"], spinner_style="yellow"):
         time.sleep(1.5)
     time.sleep(0.5)
-    console.print("[bright_black bold]Simulazione terminata... 🛑")
+    console.print(locale["simulation_ended"])
     time.sleep(0.8)
-    console.print(f"\n[bright_black bold]Nello switch sono stati processati [white]{switch.get_total_frames_processed()}[/white] frame in [white]{original_sim_sec}[/white] secondi")
+    console.print(locale["total_frames_processed"].format(total_frames=switch.get_total_frames_processed(), total_seconds=original_sim_sec))
     time.sleep(0.8)
-    console.print(f"[bright_black bold]La grandezza media del buffer dello switch è di [white]{switch.calculate_buffer_average()}[/white] [yellow]frame[/]/[white]s")
+    console.print(locale["frames_per_second"].format(frames_per_second=(switch.get_total_frames_processed()) / original_sim_sec))
     time.sleep(0.8)
 
     with console.status("", spinner_style="yellow"):
         time.sleep(1)
-    console.print("[bright_black]\n🤖 Desideri visualizzare le statistiche della simulazione? [bold bright_black](s/n)[/]")
+    console.print(locale["input_show_stats"])
     time.sleep(0.5)
     show_stats = console.input("📊 >> ")
 
-    while show_stats.lower() not in ['s', 'n']:
-        console.print(f"[red]⚠️  Attenzione! Devi rispondere con [white]s[/white] o [white]n[/white] ")
-        with console.status("[bold black]Elaborando la cazzata che hai digitato...", spinner_style="yellow"):
+    while show_stats.lower() not in ['y', 's', 'n']:
+        console.print(locale["error_input"])
+        with console.status(locale["processing_nonsense"], spinner_style="yellow"):
             time.sleep(1.5)
         time.sleep(0.5)
-        console.print("🤖[bright_black italic] Sei veramente un rimasto [/]🥱") 
+        console.print(locale["robot_error_input"]) 
         time.sleep(1.5)
-        console.print("🤖[bright_black italic] Riproviamo... vuoi visualizzare le statistiche della simulazione? (s/n)")
+        console.print(locale["robot_retry_show_stats"])
         time.sleep(1.2)
         show_stats = console.input("📊 >> ")
 
-    if show_stats.lower() == 's':
+    if show_stats.lower() == 's' or show_stats.lower() == 'y':
         with console.status("", spinner_style="yellow"):
             time.sleep(1.5)
         show_table(static=False)
@@ -358,30 +359,48 @@ if __name__ == "__main__":
     if debug:
         time.sleep = add_debug(time.sleep)
 
-    with console.status("[bold black]Avvio del programma di simulazione...", spinner_style="yellow"):
+    with console.status("[bold black] Starting up...", spinner_style="yellow"):
         time.sleep(1.5)
-    console.print("[bright_black]🤖 Benvenuto nella simulazione switch ")
+    console.print("[bright_black]🤖 Welcome to the Simple Switch Simulation")
     time.sleep(1.5)
+
+    console.print("[bright_black]🤖 Please, select your language (en/it)")
+    time.sleep(0.5)
+    
+    language = console.input("🌐 >> ")
+    while language.lower() not in ['en', 'it']:
+        console.print(f"[red]⚠️  Attention! You must choose between [white]en[/white] and [white]it[/white]")
+        with console.status("[bold black]Processing the nonsense you typed...", spinner_style="yellow"):
+            time.sleep(1.5)
+        time.sleep(0.5)
+        console.print("🤖[bright_black italic] You should go dig [/]😉") 
+        time.sleep(1.5)
+        console.print("🤖[bright_black italic] Let's try again... please, select your language (en/it)")
+        time.sleep(0.8)
+        language = console.input("🌐 >> ")
+
+    with open(f"locales/{language}.json", "r", encoding="utf8") as file:
+        locale = json.load(file)
 
     while True:
         main()
-        console.print("[bright_black]🤖 Desideri eseguire una nuova simulazione? [bold bright_black](s/n)[/]")
+        console.print(locale["new_sim"])
         time.sleep(0.5)
         new_sim = console.input("🔄 >> ")
 
-        while new_sim.lower() not in ['s', 'n']:
-            console.print(f"[red]⚠️  Attenzione! Devi rispondere con [white]s[/white] o [white]n[/white] ")
-            with console.status("[bold black]Elaborando la cazzata che hai digitato...", spinner_style="yellow"):
+        while new_sim.lower() not in ['y', 's', 'n']:
+            console.print(locale["error_input"])
+            with console.status(locale["processing_nonsense"], spinner_style="yellow"):
                 time.sleep(1.5)
             time.sleep(0.5)
-            console.print("🤖[bright_black italic] Dovresti andare a zappare [/]😉") 
+            console.print(locale["robot_error_input"]) 
             time.sleep(1.5)
-            console.print("🤖[bright_black italic] Riproviamo... vuoi eseguire una nuova simulazione? (s/n)")
+            console.print(locale["robot_retry_new_sim"])
             time.sleep(0.8)
             new_sim = console.input("🔄 >> ")
 
         if new_sim.lower() == 'n':
             with console.status("", spinner_style="yellow"):
                 time.sleep(1)
-            console.print("[bright_black]🤖 Arrivederci... 👋")
+            console.print(locale["goodbye"])
             break
