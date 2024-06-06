@@ -7,7 +7,7 @@ from rich.live import Live
 from rich.progress import Progress, BarColumn, TextColumn
 from rich.table import Table
 from rich import box
-import keyboard
+import msvcrt
 from contextlib import contextmanager
 
 # COSTANTS
@@ -17,7 +17,7 @@ MAX_FRAMES = 100
 MIN_FRAMES = 1
 
 # Debug mode
-debug = False
+debug = True
 
 # Console declaration
 console = Console()
@@ -75,24 +75,23 @@ def draw_volume_bar(k_value):
 def randomness_bar(k_value):
     progress, volume_task = draw_volume_bar(k_value)
     running = True
-    
-    def on_key_event(event):
-        nonlocal k_value, running
-        if event.name == 'right' or event.scan_code == 77 and k_value < 10:
-            k_value += 1
-            progress.update(volume_task, completed=k_value)
-        elif event.name == 'left' or event.scan_code == 75 and k_value > 1:
-            k_value -= 1
-            progress.update(volume_task, completed=k_value)
-        elif event.name == 'enter':
-            running = False
-
-    keyboard.on_press(on_key_event)
 
     with Live(progress, refresh_per_second=10, console=console):
         try:
             while running:
-                pass
+                if msvcrt.kbhit():
+                    key = msvcrt.getch()
+                    if key == b'\x00' or key == b'\xe0':
+                        key = msvcrt.getch() 
+                        if key == b'M' and k_value < 10:  
+                            k_value += 1
+                            progress.update(volume_task, completed=k_value)
+                        elif key == b'K' and k_value > 1: 
+                            k_value -= 1
+                            progress.update(volume_task, completed=k_value)
+                    elif key == b'\r': 
+                        running = False
+                time.sleep(0.01) 
         except KeyboardInterrupt:
             pass
     return k_value
@@ -334,7 +333,6 @@ def main():
         time.sleep(1)
     console.print("[bright_black]\n🤖 Desideri visualizzare le statistiche della simulazione? [bold bright_black](s/n)[/]")
     time.sleep(0.5)
-    console.input()
     show_stats = console.input("📊 >> ")
 
     while show_stats.lower() not in ['s', 'n']:
@@ -355,7 +353,6 @@ def main():
 
     with console.status("", spinner_style="yellow"):
         time.sleep(1.5)
-    
     
 if __name__ == "__main__":
     if debug:
