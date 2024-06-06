@@ -15,7 +15,7 @@ from contextlib import contextmanager
 # COSTANTS
 MAX_PCS = 5
 MAX_SIM_SECONDS = 60
-MAX_FRAMES = 200
+MAX_FRAMES = 100
 MIN_FRAMES = 1
 
 # Debug mode
@@ -327,7 +327,7 @@ def main():
     time.sleep(0.8)
     console.print(locale["total_frames_processed"].format(total_frames=switch.get_total_frames_processed(), total_seconds=original_sim_sec))
     time.sleep(0.8)
-    console.print(locale["frames_per_second"].format(frames_per_second=(switch.get_total_frames_processed()) / original_sim_sec))
+    console.print(locale["frames_per_second"].format(frames_per_second=round((switch.get_total_frames_processed()) / original_sim_sec, 2)))
     time.sleep(0.8)
 
     with console.status("", spinner_style="yellow"):
